@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
 import {
+  Box,
   Button,
   Checkbox,
   FormControl,
@@ -14,17 +14,14 @@ import {
   Select,
   TextareaAutosize,
   TextField,
+  Table,
+  TableCell,
+  TableHead,
+  TableRow,
 } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 
 function FormBuild({ formData }) {
   const [change, setChange] = useState("");
-  const [value, setValue] = useState("");
-  const [checke, setChecke] = useState([]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(change);
@@ -32,19 +29,15 @@ function FormBuild({ formData }) {
   };
 
   const handleChange = (e) => {
-    setValue(e.target.value);
-    setChange({ ...change, [e.target.name]: e.target.value });
-  };
+    if (e.target.type === "checkbox") {
+      const checke = change[e.target.name] ? change[e.target.name] : [];
 
-  const onChange = (e, op) => {
-    let find = checke.indexOf(op);
-    if (find > -1) {
-      checke.splice(find, 1);
+      let find = checke.indexOf(e.target.value);
+      find > -1 ? checke.splice(find, 1) : checke.push(e.target.value);
+      setChange({ ...change, [e.target.name]: checke });
     } else {
-      checke.push(op);
+      setChange({ ...change, [e.target.name]: e.target.value });
     }
-    setChecke(checke);
-    setChange({ ...change, [e.target.name]: checke });
   };
 
   return (
@@ -68,7 +61,7 @@ function FormBuild({ formData }) {
                           label={data.label}
                           name={data.name}
                           variant="filled"
-                          value={value[data.name]}
+                          value={change[data.name] ? change[data.name] : ""}
                           onChange={handleChange}
                           sx={{ margin: "10px", width: "100%" }}
                         />
@@ -85,7 +78,7 @@ function FormBuild({ formData }) {
                             name={data.name}
                             minRows={3}
                             label={data.label}
-                            value={value[data.name]}
+                            value={change[data.name] ? change[data.name] : ""}
                             onChange={handleChange}
                             placeholder="enter value"
                             style={{
@@ -97,7 +90,7 @@ function FormBuild({ formData }) {
                       );
                     case "Select":
                       return (
-                        <FormControl sx={{  m: 1, width: "100%" }} size="small">
+                        <FormControl sx={{ m: 1, width: "100%" }} size="small">
                           <InputLabel id="demo-select-small">
                             {data.label}
                           </InputLabel>
@@ -105,9 +98,8 @@ function FormBuild({ formData }) {
                             labelId="demo-select-small"
                             id="demo-select-small"
                             name={data.name}
-                            value={value[data.name]}
+                            value={change[data.name] ? change[data.name] : ""}
                             onChange={handleChange}
-                            
                           >
                             {data.options.map((op) => (
                               <MenuItem value={op} key={op}>
@@ -120,16 +112,18 @@ function FormBuild({ formData }) {
                     case "Checkbox":
                       return (
                         <FormGroup>
-                           <InputLabel >
-                            {data.label}
-                          </InputLabel>
+                          <InputLabel>{data.label}</InputLabel>
                           {data.options.map((op, id) => (
-                            <MenuItem key={op} value={op}>
+                            <MenuItem key={id} value={op}>
                               <Checkbox
                                 name={data.name}
                                 value={op}
-                                onChange={(e) => onChange(e, op)}
-                                selected={checke.includes(op)}
+                                onChange={handleChange}
+                                selected={
+                                  change[data.name]!==undefined
+                                    ? change[data.name].includes(op)
+                                    : false
+                                }
                               />
                               <ListItemText primary={op} />
                             </MenuItem>
@@ -141,7 +135,7 @@ function FormBuild({ formData }) {
                         <RadioGroup
                           label={data.label}
                           name={data.name}
-                          value={value[data.name]}
+                          value={change[data.name] ? change[data.name] : ""}
                           onChange={handleChange}
                         >
                           {data.options.map((op) => (
