@@ -13,7 +13,7 @@ import {
 
 const validName = new RegExp("[a-zA-Z]$");
 
-function FormComp({setFormData,formData}) {
+function FormComp({ setFormData, formData }) {
   const [data, setData] = useState({
     label: "",
     fieldtype: "",
@@ -24,14 +24,17 @@ function FormComp({setFormData,formData}) {
   const handleSubmit = (e) => {
     e.preventDefault();
     validName.test(data.name)
-      ? setFormData([...formData,{...data,options:data.options.split(',')}])
+      ? setFormData([
+          ...formData,
+          { ...data, options: data.options.split(",") },
+        ])
       : alert("enter Correct Name");
-      setData({
-        label: "",
-        fieldtype: "",
-        name: "",
-        options: "",
-      })
+    setData({
+      label: "",
+      fieldtype: "",
+      name: "",
+      options: "",
+    });
   };
 
   return (
@@ -50,7 +53,7 @@ function FormComp({setFormData,formData}) {
           id="filled-basic"
           label="Label"
           value={data.label}
-          onChange={(e) => setData({ ...data, label: e.target.value })}
+          onChange={(e) => setData({ ...data, label: e.target.value ,id:formData.length+1})}
           variant="filled"
           sx={{
             margin: "10px",
@@ -67,7 +70,7 @@ function FormComp({setFormData,formData}) {
           value={data.fieldtype}
           variant="filled"
           label="Age"
-          onChange={(e) => setData({ ...data, fieldtype: e.target.value })}
+          onChange={(e) => setData({ ...data, fieldtype: e.target.value,id:formData.length+1 })}
           sx={{ margin: "10px" }}
         >
           <MenuItem value={"Text"}>Text</MenuItem>
@@ -84,7 +87,7 @@ function FormComp({setFormData,formData}) {
           label="Name"
           variant="filled"
           value={data.name}
-          onChange={(e) => setData({ ...data, name: e.target.value })}
+          onChange={(e) => setData({ ...data, name: e.target.value,id:formData.length+1 })}
           sx={{ margin: "10px" }}
         />
       </FormControl>
@@ -95,8 +98,8 @@ function FormComp({setFormData,formData}) {
           id="filled-basic"
           label="Options"
           variant="filled"
-          value={data.type}
-          onChange={(e) => setData({ ...data, options: e.target.value })}
+          value={data.options}
+          onChange={(e) => setData({ ...data, options: e.target.value,id:formData.length+1 })}
           sx={{ margin: "10px" }}
         />
       </FormControl>

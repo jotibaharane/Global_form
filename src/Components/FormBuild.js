@@ -27,7 +27,6 @@ function FormBuild({ formData }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(checke);
     console.log(change);
     setChange("");
   };
@@ -37,7 +36,7 @@ function FormBuild({ formData }) {
     setChange({ ...change, [e.target.name]: e.target.value });
   };
 
-  const onChange = (e,op) => {
+  const onChange = (e, op) => {
     let find = checke.indexOf(op);
     if (find > -1) {
       checke.splice(find, 1);
@@ -45,15 +44,12 @@ function FormBuild({ formData }) {
       checke.push(op);
     }
     setChecke(checke);
-    setChange({ ...change, [e.target.name]:checke});
+    setChange({ ...change, [e.target.name]: checke });
   };
 
- 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-         <InputLabel sx={{ width: "100%", textAlign: "center" }}>
-         Form
-      </InputLabel>
+      <InputLabel sx={{ width: "100%", textAlign: "center" }}>Form</InputLabel>
       <Table
         aria-label="simple table"
         sx={{ height: "40px", minWidth: "100px" }}
@@ -80,44 +76,59 @@ function FormBuild({ formData }) {
 
                     case "Textarea":
                       return (
-                        <TextareaAutosize
-                        variant="filled"
-                          name={data.name}
-                          minRows={3}
-                          label={data.label}
-                          value={value[data.name]}
-                          onChange={handleChange}
-                          placeholder="enter value"
-                          style={{ margin: "10px", width: "100%" }}
-                        />
+                        <FormGroup>
+                          <label style={{ margin: "10px 10px 0 10px" }}>
+                            {data.label}
+                          </label>
+                          <TextareaAutosize
+                            variant="filled"
+                            name={data.name}
+                            minRows={3}
+                            label={data.label}
+                            value={value[data.name]}
+                            onChange={handleChange}
+                            placeholder="enter value"
+                            style={{
+                              margin: "0 10px 10px 10px",
+                              width: "100%",
+                            }}
+                          />
+                        </FormGroup>
                       );
                     case "Select":
                       return (
-                        <Select
-                          required
-                          name={data.name}
-                          variant="filled"
-                          value={value[data.name]}
-                          onChange={handleChange}
-                          label={data.label}
-                          sx={{ margin: "10px", width: "100%" }}
-                        >
-                          {data.type.map((op) => (
-                            <MenuItem value={op} key={op}>
-                              {op}
-                            </MenuItem>
-                          ))}
-                        </Select>
+                        <FormControl sx={{  m: 1, width: "100%" }} size="small">
+                          <InputLabel id="demo-select-small">
+                            {data.label}
+                          </InputLabel>
+                          <Select
+                            labelId="demo-select-small"
+                            id="demo-select-small"
+                            name={data.name}
+                            value={value[data.name]}
+                            onChange={handleChange}
+                            
+                          >
+                            {data.options.map((op) => (
+                              <MenuItem value={op} key={op}>
+                                {op}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
                       );
                     case "Checkbox":
                       return (
-                        <FormGroup >
-                          {data.type.map((op, id) => (
+                        <FormGroup>
+                           <InputLabel >
+                            {data.label}
+                          </InputLabel>
+                          {data.options.map((op, id) => (
                             <MenuItem key={op} value={op}>
                               <Checkbox
                                 name={data.name}
                                 value={op}
-                                onChange={(e) => onChange(e,op)}
+                                onChange={(e) => onChange(e, op)}
                                 selected={checke.includes(op)}
                               />
                               <ListItemText primary={op} />
@@ -133,11 +144,12 @@ function FormBuild({ formData }) {
                           value={value[data.name]}
                           onChange={handleChange}
                         >
-                          {data.type.map((op) => (
+                          {data.options.map((op) => (
                             <FormControlLabel
                               value={op}
                               control={<Radio />}
                               label={op}
+                              key={op}
                             />
                           ))}
                         </RadioGroup>
